@@ -1,0 +1,76 @@
+//needed variables at the top of the class
+    [SerializeField] Rigidbody playerRB;
+    [SerializeField] float playerSpeed;
+    [SerializeField] float rotationSpeed;
+    [SerializeField] Vector3 jumpForce;
+    bool isGrounded;
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //this line is the C# varient of System.out.print();
+        Debug.Log("squee!");
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        //create a method looking for user input
+        ControlPlayer();
+
+    }
+
+    void ControlPlayer()
+    {
+
+        //move the player forward/backwards and horizontaly 
+
+        //capture the value of horizontal input
+        float horizontal = Input.GetAxis("Horizontal");
+
+        float vertical = Input.GetAxis("Vertical");
+
+        //rotates the player
+        transform.Rotate(0, horizontal * Time.deltaTime * rotationSpeed, 0);
+
+        //moves the player
+        transform.Translate(0, 0, vertical * Time.deltaTime * playerSpeed );
+
+        //jump with spacebar
+        if(Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
+        {
+
+            //apply a force to an object
+           // playerRB.velocity = new Vector3(playerRB.velocity.x, jumpForce, playerRB.velocity.x);
+
+            //add force in a quick burst
+            playerRB.AddForce(jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    //detect when you touch a game object
+    private void OnCollisionEnter(Collision otherObject)
+    {
+
+        if (otherObject.gameObject.tag.Equals("Ground"))
+        {
+            //player touching ground is true
+            isGrounded = true;
+        }
+    }
+
+
+
+    //detect when you are not touching a game object
+    private void OnCollisionExit(Collision otherObject)
+    {
+
+        if (otherObject.gameObject.tag.Equals("Ground"))
+        {
+            //player touching ground is true
+            isGrounded = false;
+        }
+    }
